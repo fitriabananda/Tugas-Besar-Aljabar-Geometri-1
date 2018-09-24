@@ -91,7 +91,7 @@ public class Matrix
 		}
 	}
 	
-	public void SwapBaris(int a, int b)
+	public void SwapRow(int a, int b)
 	/* Melakukan swap matrix m antara a dengan b */
 	{
 		for (int j=this.GetFirstIdxKol(); j<= this.GetLastIdxKol(); j++)
