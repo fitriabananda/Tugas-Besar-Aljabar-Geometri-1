@@ -26,8 +26,5 @@ public class Spl extends matrix.Matrix
 			System.out.println("X" + i + " = " + solusi[i]);
 		}
 	}
-	
-	
-	
 
 }
