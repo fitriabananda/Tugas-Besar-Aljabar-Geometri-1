@@ -2,17 +2,20 @@ package spl;
 
 import matrix.Matrix;
 
-public class Spl extends matrix.Matrix
+public class Spl extends Matrix
 {
+	public double [] solusi;
+	
 	public void cariSolusiUnik()
+	/* Menuliskan semua solusi unik dari matriks ke dalam suatu array */
 	{
 		int i;
-		double [] solusi = new double [this.GetLastIdxKol()-1];
+		solusi = new double [this.GetLastIdxKol()];
 		
 		//Mengurang ruas kanan persamaan dengan ruas kiri
 		for (i=this.GetLastIdxBrs();i>=this.GetFirstIdxBrs();i--)
 		{	
-			for (int j=this.GetFirstIdxKol();j>=this.GetLastIdxKol()-1;j++)
+			for (int j=this.GetFirstIdxKol();j<=this.GetLastIdxKol()-1;j++)
 			{
 				solusi[i]=solusi[i]-this.Elmt(i,j)*solusi[j];
 			}
@@ -20,12 +23,12 @@ public class Spl extends matrix.Matrix
 		}
 		
 		//print solusi
-		for (i=this.GetFirstIdxKol();i<=this.GetLastIdxKol();i++)
+		for (i=this.GetFirstIdxKol();i<=this.GetLastIdxKol()-1;i++)
 		{
 			System.out.println("X" + i + " = " + solusi[i]);
 		}
 	}
-	//Menuliskan semua solusi unik dari matriks ke dalam suatu array
+	
 	
 	/* Solusi untuk x1 - xn sesuai dengan index dari array */
 	public double [] solusiSpl;
@@ -157,9 +160,9 @@ public class Spl extends matrix.Matrix
 	public static void main(String[] args)
 	{
 		
-		Spl data = new Spl(3,4);
-		//System.out.println("Hello World"); //prints hello world
-		data.BacaMatrix(3,4);
+		Spl data = new Spl(5,6);
+		System.out.println("Hello World"); //prints hello world
+		data.BacaMatrix(5,6);
 		//data.solusiBanyak();
 		//data.TulisMATRIKS();
 		data.cariSolusiUnik();
