@@ -5,8 +5,8 @@ public class Matrix
 {
 	
 	//Atribut object
-	int NBrsEff;
-	int NKolEff;
+	public int NBrsEff;
+	public int NKolEff;
 	double [][] TD = new double [BrsMax+1][KolMax+1];
 	
 	public static int BrsMin = 1;
@@ -91,6 +91,16 @@ public class Matrix
 		}
 	}
 	
+	public void MinusAllRow(int j,int n)
+	/* Mengurangi setiap row dari atas sampe bawah dari kolom  ke j dari baris n sampai akhir*/
+	{
+		for (int i=n; i<=this.GetLastIdxBrs(); i++)
+		{
+			double koef = this.Elmt(i,j)/this.Elmt(j,j);
+			this.MinusRow(j, i,koef);
+		}
+	}
+	
 	public void SwapRow(int a, int b)
 	/* Melakukan swap matrix m antara a dengan b */
 	{
@@ -111,10 +121,24 @@ public class Matrix
 		}
 	}
 	
-	public void findSwap(int j)
-	/* Mencari baris yang tidak 0, lalu di swap */
+	public boolean findSwap(int j)
+	/* Mencari baris yang tidak 0 di kolom ke j, lalu di swap */
+	/* Jika berhasil melakukan swap akan return true, jika tidak maka returnnya false */
 	{
-		
+		int x=j+1;
+		while (this.Elmt(x,j)==0 && x< this.GetLastIdxBrs())
+		{
+			x++;
+		}
+		if (Math.floor(this.Elmt(x,j))!=0)//swap
+		{
+			this.SwapRow(x, j);
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	
 	/* ********** KELOMPOK BACA/TULIS ********** */ 
@@ -171,40 +195,24 @@ public class Matrix
 	/* Menghitung nilai determinan M */
 	{
 		double det=0;
-		double tampung;
 		double kali=1;
 		boolean lanjut = true;
 		for (int j=1; j<(this.GetLastIdxKol()) && lanjut; j++)//pembuatan matrix segitiga
 		{
 			if (Math.floor(this.Elmt(j,j))==0)//jika element diagonalnya==0
 			{
-				int x=j+1;
-				while (this.Elmt(x,j)==0 && x<this.GetLastIdxBrs())
-				{
-					x++;
-				}
-				if (Math.floor(this.Elmt(x,j))!=0)//swap
+				if (findSwap(j))
 				{
 					kali*=-1;
-					for(int i=j; i<=this.GetLastIdxKol(); i++)
-					{
-						tampung = this.Elmt(x,i);
-						this.SetElmt(x,i,this.Elmt(j,i));
-						this.SetElmt(i, j, tampung);
-					}
 				}
 				else
 				{
 					lanjut = false;
 				}
 			}
-			if (lanjut) //pembuatan matrix segitiga
+			if (lanjut) //pengurangan baris
 			{
-				for (int i=j+1; i<=this.GetLastIdxBrs(); i++)
-				{
-					double koef = this.Elmt(i,j)/this.Elmt(j,j);
-					this.MinusRow(j, i,koef);
-				}
+				this.MinusAllRow(j,j+1);
 			}
 		}
 		if (lanjut)
