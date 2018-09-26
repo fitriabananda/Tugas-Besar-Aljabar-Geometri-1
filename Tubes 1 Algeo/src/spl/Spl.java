@@ -4,32 +4,6 @@ import matrix.Matrix;
 
 public class Spl extends Matrix
 {
-	public double [] solusi;
-	
-	public void cariSolusiUnik()
-	/* Menuliskan semua solusi unik dari matriks ke dalam suatu array */
-	{
-		int i;
-		solusi = new double [this.GetLastIdxKol()];
-		
-		//Mengurang ruas kanan persamaan dengan ruas kiri
-		for (i=this.GetLastIdxBrs();i>=this.GetFirstIdxBrs();i--)
-		{	
-			for (int j=this.GetFirstIdxKol();j<=this.GetLastIdxKol()-1;j++)
-			{
-				solusi[i]=solusi[i]-this.Elmt(i,j)*solusi[j];
-			}
-			solusi[i]=solusi[i]+this.Elmt(i,this.GetLastIdxKol());
-		}
-		
-		//print solusi
-		for (i=this.GetFirstIdxKol();i<=this.GetLastIdxKol()-1;i++)
-		{
-			System.out.println("X" + i + " = " + solusi[i]);
-		}
-	}
-	
-	
 	/* Solusi untuk x1 - xn sesuai dengan index dari array */
 	public double [] solusiSpl;
 	
@@ -37,6 +11,29 @@ public class Spl extends Matrix
 	/* 1 untuk x yang diketahui nilai eksaknya, 2 untuk yang bisa disubstitusikan 
 	 * Untuk yang masih 0 harusnya sudah parametric dasar */
 	public int [] solved;
+	
+	public void cariSolusiUnik()
+	/* Menuliskan semua solusi unik dari matriks ke dalam suatu array */
+	{
+		int i;
+		solusiSpl = new double [this.GetLastIdxKol()];
+		
+		//Mengurang ruas kanan persamaan dengan ruas kiri
+		for (i=this.GetLastIdxBrs();i>=this.GetFirstIdxBrs();i--)
+		{	
+			for (int j=this.GetFirstIdxKol();j<=this.GetLastIdxKol()-1;j++)
+			{
+				solusiSpl[i]=solusiSpl[i]-this.Elmt(i,j)*solusiSpl[j];
+			}
+			solusiSpl[i]=solusiSpl[i]+this.Elmt(i,this.GetLastIdxKol());
+		}
+		
+		//print solusi
+		for (i=this.GetFirstIdxKol();i<=this.GetLastIdxKol()-1;i++)
+		{
+			System.out.println("X" + i + " = " + solusiSpl[i]);
+		}
+	}
 	
 	public Spl(int nb, int nk)
 	/* Membuat matrix ukuran ixj */
@@ -156,7 +153,7 @@ public class Spl extends Matrix
 		System.out.println("adalah element dari bilangan rill!");
 	}
 	
-	/* Menyimpan nilai solusi dari x1- xn dari suatu spl */
+	
 	public static void main(String[] args)
 	{
 		
