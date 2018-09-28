@@ -1,10 +1,7 @@
 package main;
 
-import java.io.BufferedWriter;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
+
 import java.util.Scanner;
 import spl.Spl;
 import interpolasi.Interpolasi;
@@ -59,13 +56,13 @@ public class Main
 	public static void main(String[] args) throws IOException
 	{	
 		int counter = 0;
-		Spl data = new Spl();
 		output(1); //
 		pilihan = input(1,3);
 		while (pilihan!=3) // belum pilih exit
 		{	
 			if (pilihan == 1) //kalau spl
 			{
+				Spl data = new Spl();
 				output(2); //prompt metode eliminasi
 				metodePenyelesaian = input(1,2);
 				output(3); //prompt metode input
@@ -79,39 +76,40 @@ public class Main
 					System.out.println("Input jumlah kolom:");
 					nk = input(2,500);
 					data.bacaSplKeyboard(nb, nk);
-					data.outputHeaderSpl(counter, metodePenyelesaian);
-					if (data.classifier()==1)
-					{
-						data.cariSolusiUnik();
-					}
-					else if (data.classifier()==2)
-					{
-						data.solusiBanyak();
-					}
-					data.outputSolusi(data.classifier());
-				}
+									}
 				else //input dari file
 				{
 					data.bacaSplFile("array.txt");
-					data.outputHeaderSpl(counter, metodePenyelesaian);
-					if (data.classifier()==1)
-					{
-						data.cariSolusiUnik();
-					}
-					else if (data.classifier()==2)
-					{
-						data.solusiBanyak();
-					}
-					data.outputSolusi(data.classifier());
 				}
+				
+				data.outputHeaderSpl(counter, metodePenyelesaian);
+				if (data.classifier()==1)
+				{
+					data.cariSolusiUnik();
+				}
+				else if (data.classifier()==2)
+				{
+					data.solusiBanyak();
+				}
+				data.outputSolusi(data.classifier());
+
 			}
 			else if (pilihan == 2) //kalau interpolasi
 			{
+				Interpolasi data = new Interpolasi();
 				output(2); //prompt metode eliminasi
 				metodePenyelesaian = input(1,2);
 				output(3); //prompt metode input
 				caraInput = input(1,2);
-				
+				if (caraInput == 1) //input dari keyboard
+				{
+					data.bacaInterpolasiKeyboard();
+				}
+				else //input dari file
+				{
+					data.bacaInterpolasiFile("interpolasi.txt");
+				}
+				data.outputLayar(counter);
 			}
 			counter++;
 			output(1);
