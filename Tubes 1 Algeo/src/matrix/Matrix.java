@@ -1,8 +1,7 @@
 package matrix;
-import java.io.BufferedWriter;
+
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
@@ -19,7 +18,7 @@ public class Matrix
 	public static int BrsMax = 100;
 	public static int KolMin = 1;
 	public static int KolMax = 100;
-	Scanner in = new Scanner(System.in);
+	public Scanner in = new Scanner(System.in);
 	
 	
 	//Method
@@ -160,7 +159,6 @@ public class Matrix
 			for (j=KolMin; j<KolMin+NK; j++)
 			{
 				SetElmt(i,j,in.nextDouble());
-				
 			}
 		}
 	}
@@ -191,6 +189,7 @@ public class Matrix
 		
 		NBrsEff=rows;
 		NKolEff=columns;
+	
 //		System.out.println(NBrsEff);
 //		System.out.println(NKolEff);
 		
@@ -206,7 +205,7 @@ public class Matrix
 		input.close();
 	}
 	
-	public void TulisMATRIKSFile () throws IOException
+	public void TulisMATRIKSFile (PrintWriter out) throws IOException
 	/* I.S. M terdefinisi */
 	/* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
 	   dipisahkan sebuah spasi */
@@ -217,19 +216,22 @@ public class Matrix
 	8 9 10
 	*/
 	{
-		FileWriter fw = new FileWriter("output.txt", true);
-	    BufferedWriter bw = new BufferedWriter(fw);
-	    PrintWriter out = new PrintWriter(bw);
+		double angka;
 		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
 		{
-			out.print(this.Elmt(i,this.GetFirstIdxKol()));
+			angka = Math.round(this.Elmt(i,this.GetFirstIdxKol())*1000.0)/1000.0;
+			out.print(angka);
 			for (int j=this.GetFirstIdxKol()+1; j<=this.GetLastIdxKol(); j++)
 			{
-				out.print(" "+ this.Elmt(i,j));
+				angka = Math.round(this.Elmt(i,j)*1000.0)/1000.0;
+//				if (angka==-0)
+//				{
+//					angka=0;
+//				}
+				out.print(" " + angka);
 			}
 			out.println();
 		}
-		out.close();
 	}
 	
 	public void TulisMATRIKS ()
@@ -243,12 +245,15 @@ public class Matrix
 	8 9 10
 	*/
 	{
+		double angka;
 		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
 		{
-			System.out.print(this.Elmt(i,this.GetFirstIdxKol()));
+			angka = Math.round(this.Elmt(i,this.GetFirstIdxKol())*1000.0)/1000.0;
+			System.out.print(angka);
 			for (int j=this.GetFirstIdxKol()+1; j<=this.GetLastIdxKol(); j++)
 			{
-				System.out.print(" "+ this.Elmt(i,j));
+				angka = Math.round(this.Elmt(i,j)*1000.0)/1000.0;
+				System.out.print(" " + angka);
 			}
 			System.out.print("\n");
 		}
@@ -303,13 +308,6 @@ public class Matrix
 			}
 			
 		}
-		for (i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
-		{
-			for (j=this.GetFirstIdxKol(); j<=this.GetLastIdxKol(); j++) //rounding
-			{
-				this.SetElmt(i, j, Math.round(this.Elmt(i,j)*1000.0) / 1000.0);
-			}
-		}
 	}
 	
 	public void EliminasiGaussJordan()
@@ -334,12 +332,6 @@ public class Matrix
 				}
 			}
 		}
-		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
-		{
-			for (int j=this.GetFirstIdxKol(); j<=this.GetLastIdxKol(); j++) //rounding
-			{
-				this.SetElmt(i, j, Math.round(this.Elmt(i,j)*1000.0) / 1000.0);
-			}
-		}
 	}
+	
 }
