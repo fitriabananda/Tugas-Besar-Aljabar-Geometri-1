@@ -19,7 +19,6 @@ public class Spl extends Matrix
 	public double [] solusiSpl;
 	/* Solusi untuk x1 - xn sesuai dengan index dari array */
 	
-	
 	public int [] solved;
 	/* Status solved untuk x1 - xn sesuai dengan index dari array */
 	/* 1 untuk x yang diketahui nilai eksaknya, 2 untuk yang bisa disubstitusikan 
@@ -146,15 +145,7 @@ public class Spl extends Matrix
 	    	this.EliminasiGaussJordan();
 	    }
 	    /* Output matrix ke file external */
-	    for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
-		{
-			out.print(this.Elmt(i,this.GetFirstIdxKol()));
-			for (int j=this.GetFirstIdxKol()+1; j<=this.GetLastIdxKol(); j++)
-			{
-				out.print(" "+ this.Elmt(i,j));
-			}
-			out.println();
-		}
+	    this.TulisMATRIKSFile(out);
 	    this.TulisMATRIKS();
 	    
 	    out.close();
@@ -191,7 +182,7 @@ public class Spl extends Matrix
 	    }
 	    if (jenisSolusi==2)
 	    {
-	    	outputTambahanSolusiBanyak();
+	    	outputTambahanSolusiBanyak(out);
 	    }
 	    System.out.println("\n-------------------------------------------------------------------------");
 	    out.println();
@@ -200,12 +191,9 @@ public class Spl extends Matrix
 		
 	}
 	
-	public void outputTambahanSolusiBanyak() throws IOException
+	public void outputTambahanSolusiBanyak(PrintWriter out) throws IOException
 	/* Procedure output untuk solusi banyak */
 	{
-		FileWriter fw = new FileWriter("output.txt", true);
-	    BufferedWriter bw = new BufferedWriter(fw);
-	    PrintWriter out = new PrintWriter(bw);
 		System.out.print("Dengan ");
 		out.print("Dengan ");
 		for (int j=this.GetFirstIdxKol(); j<=this.GetLastIdxKol()-1; j++)
@@ -218,7 +206,6 @@ public class Spl extends Matrix
 		}
 		System.out.println("adalah element dari bilangan rill");
 		out.println("adalah element dari bilangan rill");
-		out.close();
 	}
 	
 	/* ----------------Pencari Solusi --------------*/
@@ -257,7 +244,8 @@ public class Spl extends Matrix
 		//simpan solusi ke suatu array of string
 		for (i=this.GetFirstIdxKol();i<=this.GetLastIdxKol()-1;i++)
 		{
-			persamaan[i] = "X" + i + " = " + persamaan[i];
+			
+			persamaan[i] = "X" + i + " = " + Math.round(solusiSpl[i]*1000.0)/1000.0;
 		}
 		
 	}
@@ -318,7 +306,7 @@ public class Spl extends Matrix
 				}
 				if (!foundParametric) //eksak
 				{	
-					solusiSpl[j] = this.Elmt(i, this.GetLastIdxKol()); //solusiSpl nya berupa nilai akhirnya
+					solusiSpl[j] = Math.round(this.Elmt(i, GetLastIdxKol())*1000.0)/1000.0; //solusiSpl nya berupa nilai akhirnya
 					solved[j] = 1; //assign status solved dia sebagai yang eksak
 				}
 				else //kalau ketemu yang parametric
@@ -330,6 +318,7 @@ public class Spl extends Matrix
 				this.SetElmt(i, this.GetLastIdxKol(), Math.round(this.Elmt(i, this.GetLastIdxKol())*1000.0)/1000.0 );
 				
 				/* Untuk bagian ujung alias konstantanya */
+				this.SetElmt(i, GetLastIdxKol(), Math.round(Elmt(i,GetLastIdxKol())*1000.0)/1000.0);
 				if (this.Elmt(i, this.GetLastIdxKol()) > 0 && foundParametric)
 				{
 					persamaan[j] += "+" + this.Elmt(i, this.GetLastIdxKol());
