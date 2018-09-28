@@ -1,4 +1,10 @@
 package matrix;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class Matrix
@@ -7,7 +13,7 @@ public class Matrix
 	//Atribut object
 	public int NBrsEff;
 	public int NKolEff;
-	double [][] TD = new double [BrsMax+1][KolMax+1];
+	public double [][] TD;
 	
 	public static int BrsMin = 1;
 	public static int BrsMax = 100;
@@ -27,15 +33,9 @@ public class Matrix
 	public Matrix(int nb, int nk)
 	/* Membuat matrix ukuran ixj */
 	{
+		TD = new double [nb+1][nk+1];
 		NBrsEff=nb;
 		NKolEff=nk;
-		for (int i=1; i<=nb; i++)
-		{
-			for (int j=1; j<=nk; j++)
-			{
-				this.SetElmt(i,j,0);
-			}
-		}
 	}
 	
 	//Getter
@@ -153,6 +153,7 @@ public class Matrix
 	8 9 10 
 	*/
 	{
+		TD = new double [NB+1][NK+1];
 		int i,j;
 		for (i=BrsMin; i<BrsMin+NB; i++)
 		{
@@ -164,10 +165,73 @@ public class Matrix
 		}
 	}
 	
-	public void BacaFileMatrix()
+	public void BacaFileMatrix(String namaFile) throws FileNotFoundException
 	{
+		Scanner input = new Scanner (new File(namaFile));
+		int rows = 0;
+		int columns = 0;
 		
+	    //Hitung jumlah kolom matrix
+		Scanner eachLine = new Scanner(input.nextLine());
+	    while(eachLine.hasNextDouble())
+	    {
+	    	eachLine.nextDouble();
+	        ++columns;
+	    }
+	    eachLine.close();
+	    
+	    //Hitung jumlah baris matrix
+	    input = new Scanner(new File(namaFile));
+		while(input.hasNextLine())
+		{
+		    ++rows;
+		    input.nextLine();
+		}
+		input.close();
+		
+		NBrsEff=rows;
+		NKolEff=columns;
+//		System.out.println(NBrsEff);
+//		System.out.println(NKolEff);
+		
+		//Baca data
+		input = new Scanner(new File(namaFile));
+		for(int i = 1; i <= rows; ++i)
+		{
+		    for(int j = 1; j <= columns; ++j)
+		    {
+		    	TD[i][j] = input.nextDouble();
+		    }
+		}
+		input.close();
 	}
+	
+	public void TulisMATRIKSFile () throws IOException
+	/* I.S. M terdefinisi */
+	/* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
+	   dipisahkan sebuah spasi */
+	/* Proses: Menulis nilai setiap elemen M ke layar dengan traversal per baris dan per kolom */
+	/* Contoh: menulis matriks 3x3 (ingat di akhir tiap baris, tidak ada spasi)
+	1 2 3
+	4 5 6
+	8 9 10
+	*/
+	{
+		FileWriter fw = new FileWriter("output.txt", true);
+	    BufferedWriter bw = new BufferedWriter(fw);
+	    PrintWriter out = new PrintWriter(bw);
+		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
+		{
+			out.print(this.Elmt(i,this.GetFirstIdxKol()));
+			for (int j=this.GetFirstIdxKol()+1; j<=this.GetLastIdxKol(); j++)
+			{
+				out.print(" "+ this.Elmt(i,j));
+			}
+			out.println();
+		}
+		out.close();
+	}
+	
 	public void TulisMATRIKS ()
 	/* I.S. M terdefinisi */
 	/* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
@@ -190,47 +254,92 @@ public class Matrix
 		}
 	}
 	
-	public double Determinan ()
-	/* Prekondisi: IsBujurSangkar(M) */
-	/* Menghitung nilai determinan M */
+	/*Eliminasi Gauss dan Gauss-Jordan*/
+	public void EliminasiGauss()
+	/*I.S. Matriks M terdefinisi*/
+	/*F.S. Matriks M merupakan matriks echelon*/
+	/*Proses: melakukan OBE sampai dengan semua baris merupakan leading 1*/
 	{
-		double det=0;
-		double kali=1;
-		boolean lanjut = true;
-		for (int j=1; j<(this.GetLastIdxKol()) && lanjut; j++)//pembuatan matrix segitiga
+		int i=this.GetFirstIdxBrs();
+		int j;
+		int x;
+		double koef;
+		for (j=this.GetFirstIdxKol(); (j <this.GetLastIdxKol()) && (i<=this.GetLastIdxBrs()); j++)
 		{
-			if (Math.floor(this.Elmt(j,j))==0)//jika element diagonalnya==0
+			boolean lanjut = true;
+			if (this.Elmt(i, j)==0) 
 			{
-				if (findSwap(j))
+				x=i+1;
+				boolean found=false;
+				while ((x<=this.GetLastIdxBrs())&&(!found))
 				{
-					kali*=-1;
+					if(this.Elmt(x, j)!=0)
+					{
+						found=true;
+					}
+					else
+					{
+						x++;
+					}
+				}
+				if (found) //swap
+				{
+					this.SwapRow(i, x);
 				}
 				else
 				{
 					lanjut = false;
 				}
 			}
-			if (lanjut) //pengurangan baris
+			if (lanjut) /* pengurangan matrix */
 			{
-				this.MinusAllRow(j,j+1);
-			}
-		}
-		if (lanjut)
-		{
-			det = this.Elmt(1,1);
-			int i=2;
-			int j=2;
-			while (i<=this.GetLastIdxBrs() && j<=this.GetLastIdxKol())
-			{
-				det *= this.Elmt(i,j);
+				this.MakeSatu(i,this.Elmt(i, j));
+				for (x=i+1;x<=this.GetLastIdxBrs();x++)
+				{
+					koef = this.Elmt(x, j)/this.Elmt(i, j);
+					this.MinusRow(i, x, koef);
+				}
 				i++;
-				j++;
+			}
+			
+		}
+		for (i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
+		{
+			for (j=this.GetFirstIdxKol(); j<=this.GetLastIdxKol(); j++) //rounding
+			{
+				this.SetElmt(i, j, Math.round(this.Elmt(i,j)*1000.0) / 1000.0);
 			}
 		}
-		else
+	}
+	
+	public void EliminasiGaussJordan()
+	{
+		/*I.S. Matriks M terdefinisi*/
+		/*F.S. Matriks M echelon tereduksi*/
+		/*Proses: melakukan eliminasi Gauss kemudian dari kolom dan baris terakhir,
+		menjadikan setiap kolom memiliki elemen diagonal 1 dan elemen lainnya 0*/
+		for(int j=this.GetLastIdxKol()-1; j>=this.GetFirstIdxKol()+1; j--)
 		{
-			det = 0;
+			int i=this.GetLastIdxBrs();
+			while ((i>=this.GetFirstIdxBrs())&&(this.Elmt(i, j)==0))
+			{
+				i--;
+			}
+			if ( (Math.floor(this.Elmt(i, j))==1) && (i-1>=this.GetFirstIdxBrs()))
+			{
+				for (int x=i-1; x>=this.GetFirstIdxBrs(); x--)
+				{
+					double koef = this.Elmt(x, j);
+					this.MinusRow(i, x, koef);
+				}
+			}
 		}
-		return det*kali;
+		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
+		{
+			for (int j=this.GetFirstIdxKol(); j<=this.GetLastIdxKol(); j++) //rounding
+			{
+				this.SetElmt(i, j, Math.round(this.Elmt(i,j)*1000.0) / 1000.0);
+			}
+		}
 	}
 }
