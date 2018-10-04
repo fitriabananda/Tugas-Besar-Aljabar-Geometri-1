@@ -15,13 +15,12 @@ public class Matrix
 	public double [][] TD;
 	
 	public static int BrsMin = 1;
-	public static int BrsMax = 100;
 	public static int KolMin = 1;
-	public static int KolMax = 100;
 	public Scanner in = new Scanner(System.in);
 	
 	
 	//Method
+	
 	//Konstruktor
 	public Matrix()
 	{
@@ -90,16 +89,6 @@ public class Matrix
 		}
 	}
 	
-	public void MinusAllRow(int j,int n)
-	/* Mengurangi setiap row dari atas sampe bawah dari kolom  ke j dari baris n sampai akhir*/
-	{
-		for (int i=n; i<=this.GetLastIdxBrs(); i++)
-		{
-			double koef = this.Elmt(i,j)/this.Elmt(j,j);
-			this.MinusRow(j, i,koef);
-		}
-	}
-	
 	public void SwapRow(int a, int b)
 	/* Melakukan swap matrix m antara a dengan b */
 	{
@@ -144,13 +133,6 @@ public class Matrix
 	public void BacaMatrix (int NB, int NK)
 	/* I.S. IsIdxValid(NB,NK) */ 
 	/* F.S. M terdefinisi nilai elemen efektifnya, berukuran NB x NK */
-	/* Proses: Melakukan MakeMATRIKS(M,NB,NK) dan mengisi nilai efektifnya */
-	/* Selanjutnya membaca nilai elemen per baris dan kolom */
-	/* Contoh: Jika NB = 3 dan NK = 3, maka contoh cara membaca isi matriks :
-	1 2 3
-	4 5 6
-	8 9 10 
-	*/
 	{
 		TD = new double [NB+1][NK+1];
 		int i,j;
@@ -190,9 +172,6 @@ public class Matrix
 		NBrsEff=rows;
 		NKolEff=columns;
 	
-//		System.out.println(NBrsEff);
-//		System.out.println(NKolEff);
-		
 		//Baca data
 		input = new Scanner(new File(namaFile));
 		for(int i = 1; i <= rows; ++i)
@@ -209,12 +188,6 @@ public class Matrix
 	/* I.S. M terdefinisi */
 	/* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
 	   dipisahkan sebuah spasi */
-	/* Proses: Menulis nilai setiap elemen M ke layar dengan traversal per baris dan per kolom */
-	/* Contoh: menulis matriks 3x3 (ingat di akhir tiap baris, tidak ada spasi)
-	1 2 3
-	4 5 6
-	8 9 10
-	*/
 	{
 		double angka;
 		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
@@ -224,10 +197,6 @@ public class Matrix
 			for (int j=this.GetFirstIdxKol()+1; j<=this.GetLastIdxKol(); j++)
 			{
 				angka = Math.round(this.Elmt(i,j)*1000.0)/1000.0;
-//				if (angka==-0)
-//				{
-//					angka=0;
-//				}
 				out.print(" " + angka);
 			}
 			out.println();
@@ -238,12 +207,6 @@ public class Matrix
 	/* I.S. M terdefinisi */
 	/* F.S. Nilai M(i,j) ditulis ke layar per baris per kolom, masing-masing elemen per baris 
 	   dipisahkan sebuah spasi */
-	/* Proses: Menulis nilai setiap elemen M ke layar dengan traversal per baris dan per kolom */
-	/* Contoh: menulis matriks 3x3 (ingat di akhir tiap baris, tidak ada spasi)
-	1 2 3
-	4 5 6
-	8 9 10
-	*/
 	{
 		double angka;
 		for (int i=this.GetFirstIdxBrs(); i<=this.GetLastIdxBrs(); i++)
@@ -271,7 +234,7 @@ public class Matrix
 		double koef;
 		for (j=this.GetFirstIdxKol(); (j <this.GetLastIdxKol()) && (i<=this.GetLastIdxBrs()); j++)
 		{
-			boolean lanjut = true;
+			boolean lanjut = true; //lanjut ke baris bawah, kalau false artinya ke kolom sampingnya pada baris sama
 			if (this.Elmt(i, j)==0) 
 			{
 				x=i+1;
@@ -311,11 +274,11 @@ public class Matrix
 	}
 	
 	public void EliminasiGaussJordan()
+	/*I.S. Matriks M terdefinisi*/
+	/*F.S. Matriks M echelon tereduksi*/
+	/*Proses: melakukan eliminasi Gauss kemudian dari kolom dan baris terakhir,
+	menjadikan setiap kolom memiliki elemen diagonal 1 dan elemen lainnya 0*/
 	{
-		/*I.S. Matriks M terdefinisi*/
-		/*F.S. Matriks M echelon tereduksi*/
-		/*Proses: melakukan eliminasi Gauss kemudian dari kolom dan baris terakhir,
-		menjadikan setiap kolom memiliki elemen diagonal 1 dan elemen lainnya 0*/
 		for(int j=this.GetLastIdxKol()-1; j>=this.GetFirstIdxKol()+1; j--)
 		{
 			int i=this.GetLastIdxBrs();

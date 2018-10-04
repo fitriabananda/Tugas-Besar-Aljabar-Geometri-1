@@ -1,9 +1,9 @@
 package main;
 
+import spl.Spl;
 import java.io.IOException;
 
 import java.util.Scanner;
-import spl.Spl;
 import interpolasi.Interpolasi;
 
 public class Main
@@ -109,7 +109,7 @@ public class Main
 				{
 					data.bacaInterpolasiFile("interpolasi.txt");
 				}
-				data.outputLayar(counter);
+				data.outputHasil(counter);
 			}
 			counter++;
 			output(1);

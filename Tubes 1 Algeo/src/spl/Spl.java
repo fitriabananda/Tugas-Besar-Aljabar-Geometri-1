@@ -13,7 +13,7 @@ public class Spl extends Matrix
 	/* Atribut Kelas */
 	
 	public String [] persamaan;
-	/* Array string untuk menyimpan tipe output */
+	/* Array string untuk menyimpan persamaan output */
 	
 	
 	public double [] solusiSpl;
@@ -123,6 +123,7 @@ public class Spl extends Matrix
 		}
 		return kembalian;
 	}
+	
 	/* ----------------Procedure Output Hasil ------*/
 	public void outputHeaderSpl(int counter,int metodePenyelesaian) throws IOException
 	{
@@ -147,7 +148,6 @@ public class Spl extends Matrix
 	    /* Output matrix ke file external */
 	    this.TulisMATRIKSFile(out);
 	    this.TulisMATRIKS();
-	    
 	    out.close();
 	}
 	
@@ -342,25 +342,4 @@ public class Spl extends Matrix
 			}
 		}
 	}
-	
-	
-	public static void main(String[] args) throws FileNotFoundException
-	{
-		Spl data = new Spl(4,7);
-		data.BacaMatrix(4, 7);
-		data.EliminasiGauss();
-		System.out.println(data.classifier());
-		data.TulisMATRIKS();
-		
-		//System.out.println("Hello World"); //prints hello world
-		
-		//data.BacaFileMatrix("array.txt");
-		//data.solusiBanyak();
-		//data.TulisMATRIKS();
-		//data.cariSolusiUnik();
-		//System.out.println("Determinan= " + data.Determinan());
-		//System.out.println();
-		//data.TulisMATRIKS();
-	}
-
 }
