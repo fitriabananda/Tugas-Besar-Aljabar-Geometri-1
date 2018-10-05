@@ -1,0 +1,12 @@
+1:
+Dengan eliminasi gauss-jordan, dihasilkan matrix:
+1.0 0.0 0.0 -4.0
+0.0 1.0 0.0 2.0
+0.0 0.0 1.0 7.0
+0.0 0.0 0.0 0.0
+Jenis solusi SPL adalah solusi unik:
+X1 = -4.0
+X2 = 2.0
+X3 = 7.0
+
+-------------------------------------------------------------------------
